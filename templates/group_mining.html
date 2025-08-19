@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Group Mining Lobby | Zytherion Mining</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Poppins:wght@300;400;600;700&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #e0f2f7 0%, #d1e0f0 100%); /* Light subtle gradient background */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: #333;
+            overflow: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(100, 100, 255, 0.1) 0%, rgba(150, 0, 255, 0.1) 100%);
+            animation: gradientMove 15s ease infinite;
+            background-size: 200% 200%;
+            z-index: -1;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.85); /* Frosted glass white */
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15); /* Stronger shadow */
+            text-align: center;
+            max-width: 500px; /* Adjusted max-width for lobby */
+            width: 90%;
+            box-sizing: border-box;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+            animation: fadeIn 1s ease-out;
+            border: 2px solid rgba(255, 255, 255, 0.5); /* Subtle border */
+            backdrop-filter: blur(10px); /* Frosted glass effect */
+            margin-bottom: 20px; /* Space for footer */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            font-family: 'Orbitron', sans-serif; /* Futuristic font */
+            color: #2e008c; /* Darker purple */
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            font-weight: 700;
+            position: relative;
+            padding-bottom: 15px;
+            text-shadow: 0 0 10px rgba(74, 0, 224, 0.6); /* Glowing effect */
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 5px;
+            background: linear-gradient(90deg, #4a00e0, #8e2de2);
+            border-radius: 3px;
+            box-shadow: 0 0 12px rgba(142, 45, 226, 0.6); /* Glowing underline */
+        }
+
+        p {
+            margin-bottom: 25px;
+            font-size: 1.1em;
+            color: #444;
+        }
+
+        /* General button styling */
+        button {
+            background: linear-gradient(90deg, #4a00e0, #8e2de2);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            display: flex; /* For icon and text alignment */
+            align-items: center;
+            justify-content: center; /* Center content within button */
+            gap: 10px;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: skewX(-30deg);
+            transition: 0.5s ease-in-out;
+            z-index: -1;
+        }
+
+        button:hover::before {
+            left: 100%;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(90deg, #8e2de2, #4a00e0);
+        }
+
+        /* Specific styling for the "Join Existing Room" trigger button */
+        #joinRoomTrigger {
+            margin-top: 15px; /* Space between create and join trigger */
+        }
+
+        /* Style for "Back to Dashboard" link as a button */
+        .back-to-dashboard-link {
+            display: inline-block;
+            margin-top: 30px;
+        }
+
+        .back-to-dashboard-link button {
+            background: linear-gradient(90deg, #6a0dad, #a25be2); /* Slightly different purple for back button */
+            width: auto; /* Allow button to size to content */
+            padding: 10px 25px; /* Smaller padding for back button */
+            font-size: 1em;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .back-to-dashboard-link button:hover {
+            background: linear-gradient(90deg, #a25be2, #6a0dad);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6); /* Dark semi-transparent background */
+            backdrop-filter: blur(8px); /* The blur effect */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000; /* Ensure it's on top of everything */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Modal Content */
+        .modal-content {
+            background-color: rgba(255, 255, 255, 0.95); /* White, slightly transparent */
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 380px;
+            width: 90%;
+            position: relative;
+            transform: scale(0.9); /* Start slightly smaller for animation */
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(5px); /* Subtle blur on modal content itself */
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .modal-content h3 {
+            font-family: 'Orbitron', sans-serif;
+            color: #4a00e0;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            font-weight: 600;
+            text-shadow: 0 0 5px rgba(74, 0, 224, 0.4);
+        }
+
+        .modal-content input[type="text"] {
+            margin-bottom: 20px;
+            width: calc(100% - 20px); /* Adjust width for modal padding */
+        }
+
+        .modal-content button[type="submit"] {
+            margin-top: 10px;
+        }
+
+        .modal-close-button {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            color: #888;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .modal-close-button:hover {
+            color: #4a00e0;
+        }
+
+        /* Particle effects */
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: float 10s infinite ease-in-out;
+            opacity: 0;
+            z-index: 0;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) translateX(0); opacity: 0; }
+            25% { opacity: 1; }
+            50% { transform: translateY(-50px) translateX(20px); opacity: 0.8; }
+            75% { opacity: 1; }
+            100% { transform: translateY(0) translateX(0); opacity: 0; }
+        }
+
+        /* Glare effect for container */
+        .glare {
+            position: absolute;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: -100%;
+            transform: skewX(-20deg);
+            animation: moveGlare 5s infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes moveGlare {
+            0% { left: -100%; }
+            50% { left: 100%; }
+            100% { left: -100%; }
+        }
+
+        footer {
+            margin-top: auto;
+            padding: 20px;
+            color: #777;
+            font-size: 0.9em;
+            text-align: center;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.05);
+            position: relative;
+            z-index: 2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="glare"></div>
+        <h2>Group Mining Lobby</h2>
+        <p>Choose your action:</p>
+
+        <form action="/create_room" method="get">
+            <button type="submit">Create New Room</button>
+        </form>
+
+        <!-- New button to trigger the modal -->
+        <button type="button" id="joinRoomTrigger">Join Existing Room</button>
+
+        <div class="back-to-dashboard-link">
+            <a href="/dashboard"><button>← Back to Dashboard</button></a>
+        </div>
+    </div>
+
+    <!-- The Modal Overlay and Content -->
+    <div class="modal-overlay" id="joinRoomModal">
+        <div class="modal-content">
+            <button class="modal-close-button" id="closeModalButton">&times;</button>
+            <h3>Enter Room Code</h3>
+            <form action="/join_room" method="post">
+                <input type="text" name="code" placeholder="Room Code" required>
+                <button type="submit">Join Room</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Zytherion Mining. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const body = document.body;
+            const joinRoomTrigger = document.getElementById('joinRoomTrigger');
+            const joinRoomModal = document.getElementById('joinRoomModal');
+            const closeModalButton = document.getElementById('closeModalButton');
+            const modalContent = document.querySelector('.modal-content');
+
+            // Add particle effects
+            function createParticle() {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                const size = Math.random() * 10 + 5;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${Math.random() * 100}vw`;
+                particle.style.top = `${Math.random() * 100}vh`;
+                particle.style.animationDuration = `${Math.random() * 5 + 5}s`;
+                particle.style.animationDelay = `${Math.random() * 5}s`;
+                body.appendChild(particle);
+
+                particle.addEventListener('animationend', () => {
+                    particle.remove();
+                });
+            }
+
+            for (let i = 0; i < 20; i++) {
+                createParticle();
+            }
+
+            setInterval(createParticle, 1000);
+
+            // Modal Logic
+            joinRoomTrigger.addEventListener('click', () => {
+                joinRoomModal.classList.add('active');
+            });
+
+            closeModalButton.addEventListener('click', () => {
+                joinRoomModal.classList.remove('active');
+            });
+
+            // Close modal if clicking outside the modal content
+            joinRoomModal.addEventListener('click', (event) => {
+                if (event.target === joinRoomModal) {
+                    joinRoomModal.classList.remove('active');
+                }
+            });
+
+            // Console log for a bit of a "hacker" feel
+            console.log("%cZytherion Group Mining Lobby", "color: #4a00e0; font-size: 20px; font-weight: bold; font-family: 'Orbitron', sans-serif;");
+            console.log("%cEstablishing secure connection to mining networks...", "color: #8e2de2; font-size: 14px;");
+        });
+    </script>
+</body>
+</html>

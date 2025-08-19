@@ -1,0 +1,17 @@
+{
+  "Index": 133,
+  "Timestamp": "2025-08-17T14:59:30.930995",
+  "Transactions": [
+    {
+      "from": "SYSTEM",
+      "to": "zyth-3dc13e1c6f3b31d5",
+      "amount": 0.0030517578125,
+      "timestamp": "2025-08-17T14:59:30.930995"
+    }
+  ],
+  "PreviousHash": "00000c512753d9669ff55dbdf79a44fe4df530c5b288b0cf915b15c30aeccd0a",
+  "Nonce": 1805161,
+  "Miner": "zyth-3dc13e1c6f3b31d5",
+  "Reward": 0.0030517578125,
+  "Hash": "00000536b915d15bceaa9932e054eaac0492cf266bf9072d5da4236ef06d0341"
+}

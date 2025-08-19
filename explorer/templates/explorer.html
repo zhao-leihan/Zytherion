@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Zytherion Explorer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Poppins:wght@300;400;600;700&family=Roboto+Mono:wght@400;700&display=swap');
+
+        /* Main body styling */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #e0f2f7 0%, #d1e0f0 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: #333;
+            overflow-x: hidden;
+            position: relative;
+            transition: filter 0.5s ease-in-out;
+        }
+        
+        body.blurred-background {
+            filter: blur(5px);
+            pointer-events: none;
+        }
+
+        /* Animated background gradient */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(100, 100, 255, 0.1) 0%, rgba(150, 0, 255, 0.1) 100%);
+            animation: gradientMove 15s ease infinite;
+            background-size: 200% 200%;
+            z-index: -1;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* Logo styling */
+        .logo {
+            width: 120px;
+            margin-top: 30px;
+            margin-bottom: 10px;
+            animation: logoPulse 2s infinite alternate;
+        }
+
+        @keyframes logoPulse {
+            from { transform: scale(1); opacity: 0.8; }
+            to { transform: scale(1.05); opacity: 1; }
+        }
+
+        /* Main title styling */
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: #2e008c;
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 2em;
+            font-weight: 700;
+            position: relative;
+            padding-bottom: 10px;
+            text-shadow: 0 0 8px rgba(74, 0, 224, 0.6);
+            word-break: break-all;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #4a00e0, #8e2de2);
+            border-radius: 2px;
+            box-shadow: 0 0 10px rgba(142, 45, 226, 0.6);
+        }
+        
+        /* Search bar styling */
+        .search-container {
+            width: 90%;
+            max-width: 600px;
+            display: flex;
+            margin-bottom: 30px;
+            background-color: rgba(255, 255, 255, 0.85);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 8px;
+        }
+        .search-container input {
+            flex-grow: 1;
+            border: none;
+            background: transparent;
+            padding: 8px 12px;
+            font-size: 0.9em;
+            outline: none;
+            color: #333;
+            font-family: 'Poppins', sans-serif;
+        }
+        .search-container input::placeholder {
+            color: #888;
+        }
+        .search-container button {
+            background: linear-gradient(90deg, #4a00e0, #8e2de2);
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+        .search-container button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Main content views */
+        .view-container {
+            width: 95%;
+            max-width: 800px;
+            background-color: rgba(255, 255, 255, 0.85);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+            margin-bottom: 20px;
+        }
+
+        .visible-view {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+        }
+
+        /* Table styling */
+        .explorer-table-wrapper {
+            overflow-x: auto;
+            border-radius: 10px;
+            width: 100%;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+            font-family: 'Poppins', sans-serif;
+            white-space: nowrap;
+        }
+        th {
+            font-family: 'Orbitron', sans-serif;
+            background-color: #4a00e0;
+            color: #fff;
+            font-weight: 600;
+            font-size: 1em;
+            border: none;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        th:first-child { border-top-left-radius: 10px; }
+        th:last-child { border-top-right-radius: 10px; }
+        td {
+            background-color: rgba(255, 255, 255, 0.7);
+            border-bottom: 1px solid rgba(220, 220, 255, 0.5);
+            transition: all 0.3s ease;
+            color: #555;
+            font-size: 0.9em;
+        }
+        tr:hover td {
+            background-color: rgba(255, 255, 255, 1);
+            transform: scale(1.01);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        tr.visible-row {
+            animation: fadeInRow 0.5s ease-out forwards;
+        }
+        tr.hidden-row {
+            display: none;
+        }
+        @keyframes fadeInRow {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        tr:last-child td { border-bottom: none; }
+        td a {
+            color: #4a00e0;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        td a:hover {
+            color: #8e2de2;
+            text-decoration: underline;
+        }
+        .hash-cell {
+            font-family: 'Roboto Mono', monospace;
+            word-break: break-all;
+            color: #007bff;
+        }
+        .miner-cell {
+            color: #2e008c;
+            font-weight: 500;
+        }
+        .reward-cell {
+            color: #008000;
+            font-weight: bold;
+        }
+        
+        /* Block Details */
+        .block-details {
+            text-align: left;
+            line-height: 1.8;
+            padding: 0 10px;
+        }
+        .block-details p {
+            margin: 8px 0;
+            color: #555;
+            word-break: break-all;
+        }
+        .block-details b {
+            font-family: 'Orbitron', sans-serif;
+            color: #4a00e0;
+            font-weight: 600;
+            margin-right: 5px;
+        }
+        .block-details .hash-value {
+            font-family: 'Roboto Mono', monospace;
+            color: #007bff;
+        }
+        
+        /* Block Animation */
+        .block-animator {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 150px;
+            height: 150px;
+            perspective: 1000px;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        .block-animator.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .cube {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: rotateCube 2s infinite ease-in-out;
+        }
+        .cube-face {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            border: 2px solid #8e2de2;
+            background: rgba(255, 255, 255, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5em;
+            color: #4a00e0;
+            box-shadow: inset 0 0 10px rgba(142, 45, 226, 0.5);
+            transition: all 0.3s ease;
+        }
+        .cube-face.front  { transform: rotateY(0deg) translateZ(75px); }
+        .cube-face.back   { transform: rotateY(180deg) translateZ(75px); }
+        .cube-face.left   { transform: rotateY(-90deg) translateZ(75px); }
+        .cube-face.right  { transform: rotateY(90deg) translateZ(75px); }
+        .cube-face.top    { transform: rotateX(90deg) translateZ(75px); }
+        .cube-face.bottom { transform: rotateX(-90deg) translateZ(75px); }
+        @keyframes rotateCube {
+            from { transform: rotateX(0) rotateY(0) rotateZ(0); }
+            to { transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg); }
+        }
+        
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+        .pagination-button {
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(142, 45, 226, 0.5);
+            color: #4a00e0;
+            padding: 8px 12px;
+            margin: 0 3px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+        .pagination-button:hover:not(.active) {
+            background-color: #f0f0f0;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .pagination-button.active {
+            background: linear-gradient(90deg, #4a00e0, #8e2de2);
+            color: white;
+            border-color: #4a00e0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            pointer-events: none;
+        }
+        .pagination-button.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        footer {
+            width: 100%;
+            padding: 20px;
+            color: #777;
+            font-size: 0.9em;
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            bottom: 0;
+            z-index: 100;
+        }
+
+        /* Improved Back Button */
+        .back-button-container {
+            width: 100%;
+            max-width: 800px;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .back-button-container a {
+            text-decoration: none;
+        }
+        
+        .back-button {
+            background: linear-gradient(90deg, #6a0dad, #a25be2);
+            color: white;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(90deg, #a25be2, #6a0dad);
+        }
+        
+        /* Responsive Table */
+        @media screen and (max-width: 600px) {
+            .logo {
+                width: 100px;
+                margin-top: 20px;
+                margin-bottom: 5px;
+            }
+            h2 {
+                font-size: 1.5em;
+                margin-bottom: 15px;
+            }
+            h2::after {
+                width: 60px;
+                height: 3px;
+            }
+            .search-container {
+                padding: 5px;
+                margin-bottom: 20px;
+            }
+            .search-container input, .search-container button {
+                font-size: 0.8em;
+                padding: 6px 10px;
+            }
+            th, td {
+                padding: 8px;
+                font-size: 0.8em;
+            }
+            .pagination-button {
+                padding: 6px 10px;
+                font-size: 0.8em;
+            }
+            .block-details p {
+                font-size: 0.9em;
+            }
+            .back-button {
+                padding: 8px 15px;
+                font-size: 0.9em;
+            }
+            
+            table thead { display: none; }
+            table, tbody, tr, td {
+                display: block;
+                width: 100%;
+            }
+            tr {
+                margin-bottom: 15px;
+                border-radius: 10px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+                border: 1px solid rgba(220, 220, 255, 0.5);
+                padding: 10px 0;
+            }
+            td {
+                text-align: right;
+                position: relative;
+                padding-left: 50%;
+                border: none;
+                background-color: transparent;
+            }
+            td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 10px;
+                width: 45%;
+                text-align: left;
+                font-weight: bold;
+                color: #4a00e0;
+            }
+            tr:hover td {
+                transform: none;
+                box-shadow: none;
+            }
+        }
+        
+        /* Particle effects */
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: float 10s infinite ease-in-out;
+            opacity: 0;
+            z-index: 0;
+        }
+        @keyframes float {
+            0% { transform: translateY(0) translateX(0); opacity: 0; }
+            25% { opacity: 1; }
+            50% { transform: translateY(-50px) translateX(20px); opacity: 0.8; }
+            75% { opacity: 1; }
+            100% { transform: translateY(0) translateX(0); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <img src="https://github.com/zhao-leihan/Logo-Zytherion-coin/blob/main/Zytherion.png?raw=true" alt="Zytherion Logo" class="logo">
+    
+    <h2>Zytherion Explorer</h2>
+    
+    <div class="search-container">
+        <input type="text" id="search-input" placeholder="Search block by index">
+        <button id="search-button">Search</button>
+    </div>
+
+    <!-- Container for Explorer View -->
+    <div id="explorer-view" class="view-container">
+        <div class="explorer-table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Index</th>
+                        <th>Miner</th>
+                        <th>Reward</th>
+                        <th>Tx Count</th>
+                        <th>Hash</th>
+                    </tr>
+                </thead>
+                <tbody id="block-list">
+                    {% for b in chain %}
+                    <tr class="hidden-row">
+                        <td data-label="Index"><a onclick="animateAndShowDetails({{b.Index}})">{{b.Index}}</a></td>
+                        <td data-label="Miner">{{b.Miner}}</td>
+                        <td data-label="Reward">{{b.Reward}}</td>
+                        <td data-label="Tx Count">{{b.Transactions|length}}</td>
+                        <td data-label="Hash">{{b.Hash[:20]}}...</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="pagination" id="pagination-controls"></div>
+    </div>
+
+    <!-- Container for Block Details View -->
+    <div id="block-view" class="view-container" style="display: none;">
+        <div class="back-button-container">
+            <a href="#" onclick="hideBlockDetails()">
+                <button class="back-button">
+                    <span style="font-size: 1.5em; line-height: 1;">←</span> Kembali ke Daftar Blok
+                </button>
+            </a>
+        </div>
+        <div class="block-details">
+            <h3 id="block-index-title"></h3>
+            <p><b>Miner:</b> <span id="block-miner"></span></p>
+            <p><b>Reward:</b> <span id="block-reward"></span></p>
+            <p><b>Hash:</b> <span id="block-hash"></span></p>
+            <p><b>Prev Hash:</b> <span id="block-prev-hash"></span></p>
+        </div>
+        
+        <h3>Transactions</h3>
+        <div class="explorer-table-wrapper">
+            <table id="transactions-table">
+                <thead>
+                    <tr>
+                        <th>From</th><th>To</th><th>Amount</th><th>Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Block Animator -->
+    <div class="block-animator" id="block-animator">
+        <div class="cube">
+            <div class="cube-face front"></div>
+            <div class="cube-face back"></div>
+            <div class="cube-face left"></div>
+            <div class="cube-face right"></div>
+            <div class="cube-face top"></div>
+            <div class="cube-face bottom"></div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Zytherion Mining. All rights reserved.</p>
+    </footer>
+    
+    <script>
+        // Data blockchain from Flask, stored in a JavaScript variable
+        const blockchain = {{ chain | tojson }};
+
+        const explorerView = document.getElementById('explorer-view');
+        const blockView = document.getElementById('block-view');
+        const blockAnimator = document.getElementById('block-animator');
+        const searchInput = document.getElementById('search-input');
+        const searchButton = document.getElementById('search-button');
+
+        // --- Pagination Logic ---
+        const tableBody = document.getElementById('block-list');
+        const rows = Array.from(tableBody.querySelectorAll('tr'));
+        const paginationControls = document.getElementById('pagination-controls');
+        
+        const rowsPerPage = 10;
+        let currentPage = 1;
+        const totalPages = Math.ceil(rows.length / rowsPerPage);
+
+        function displayPage(page) {
+            currentPage = page;
+            const start = (currentPage - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+
+            rows.forEach((row, index) => {
+                row.classList.remove('visible-row');
+                row.classList.add('hidden-row');
+            });
+            
+            const rowsToShow = rows.slice(start, end);
+            rowsToShow.forEach((row, index) => {
+                setTimeout(() => {
+                    row.classList.remove('hidden-row');
+                    row.classList.add('visible-row');
+                }, index * 50);
+            });
+            
+            updatePaginationControls();
+        }
+
+        function updatePaginationControls() {
+            paginationControls.innerHTML = '';
+            if (totalPages > 1) {
+                const prevBtn = document.createElement('button');
+                prevBtn.innerText = 'Previous';
+                prevBtn.classList.add('pagination-button');
+                if (currentPage === 1) prevBtn.classList.add('disabled');
+                prevBtn.addEventListener('click', () => { if (currentPage > 1) displayPage(currentPage - 1); });
+                paginationControls.appendChild(prevBtn);
+                for (let i = 1; i <= totalPages; i++) {
+                    const pageBtn = document.createElement('button');
+                    pageBtn.innerText = i;
+                    pageBtn.classList.add('pagination-button');
+                    if (i === currentPage) pageBtn.classList.add('active');
+                    pageBtn.addEventListener('click', () => displayPage(i));
+                    paginationControls.appendChild(pageBtn);
+                }
+                const nextBtn = document.createElement('button');
+                nextBtn.innerText = 'Next';
+                nextBtn.classList.add('pagination-button');
+                if (currentPage === totalPages) nextBtn.classList.add('disabled');
+                nextBtn.addEventListener('click', () => { if (currentPage < totalPages) displayPage(currentPage + 1); });
+                paginationControls.appendChild(nextBtn);
+            }
+        }
+        
+        // --- Core UI/UX Logic ---
+
+        // Function to trigger block animation and then show details
+        function animateAndShowDetails(index) {
+            // Hide explorer view and show animator
+            explorerView.classList.remove('visible-view');
+            explorerView.style.display = 'none';
+
+            blockAnimator.classList.add('active');
+            
+            // Set block index on a cube face
+            document.querySelector('.cube-face').textContent = `Block ${index}`;
+
+            // Hide the block animator and show the details after a delay
+            setTimeout(() => {
+                blockAnimator.classList.remove('active');
+                showBlockDetails(index);
+            }, 2500); // Animation duration
+        }
+
+        // Search button click handler
+        searchButton.addEventListener('click', () => {
+            const index = parseInt(searchInput.value);
+            if (!isNaN(index)) {
+                animateAndShowDetails(index);
+            } else {
+                alert('Please enter a valid block index!');
+            }
+        });
+
+        // The original functions, modified to handle animations
+        function showBlockDetails(index) {
+            const block = blockchain.find(b => b.Index === index);
+            if (!block) {
+                alert('Blok tidak ditemukan!');
+                explorerView.style.display = 'block';
+                explorerView.classList.add('visible-view');
+                return;
+            }
+
+            document.getElementById('block-index-title').textContent = `📦 Block ${block.Index}`;
+            document.getElementById('block-miner').textContent = block.Miner;
+            document.getElementById('block-reward').textContent = `${block.Reward} ZYTH`;
+            document.getElementById('block-hash').textContent = block.Hash;
+            document.getElementById('block-prev-hash').textContent = block.PreviousHash;
+
+            const transactionsTableBody = document.querySelector('#transactions-table tbody');
+            transactionsTableBody.innerHTML = '';
+            block.Transactions.forEach(tx => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="address-cell" data-label="From">${tx.from}</td>
+                    <td class="address-cell" data-label="To">${tx.to}</td>
+                    <td class="amount-cell" data-label="Amount">${tx.amount} ZYTH</td>
+                    <td class="timestamp-cell" data-label="Timestamp">${tx.timestamp}</td>
+                `;
+                transactionsTableBody.appendChild(row);
+            });
+
+            blockView.style.display = 'block';
+            blockView.classList.add('visible-view');
+        }
+
+        function hideBlockDetails() {
+            blockView.classList.remove('visible-view');
+            setTimeout(() => {
+                blockView.style.display = 'none';
+                explorerView.style.display = 'block';
+                explorerView.classList.add('visible-view');
+                searchInput.value = ''; // Clear search input
+            }, 500);
+        }
+
+        // Jalankan saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', () => {
+            displayPage(1); // Initialize pagination
+            explorerView.classList.add('visible-view');
+
+            const body = document.body;
+            function createParticle() {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                const size = Math.random() * 10 + 5;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${Math.random() * 100}vw`;
+                particle.style.top = `${Math.random() * 100}vh`;
+                particle.style.animationDuration = `${Math.random() * 5 + 5}s`;
+                particle.style.animationDelay = `${Math.random() * 5}s`;
+                body.appendChild(particle);
+                particle.addEventListener('animationend', () => { particle.remove(); });
+            }
+            for (let i = 0; i < 20; i++) { createParticle(); }
+            setInterval(createParticle, 1000);
+        });
+    </script>
+</body>
+</html>

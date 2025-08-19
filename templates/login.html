@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login | Zytherion Mining</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #e0f2f7 0%, #d1e0f0 100%); /* Light subtle gradient background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: #333;
+            overflow: hidden; /* Hide overflow for gradient animation */
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(100, 100, 255, 0.1) 0%, rgba(150, 0, 255, 0.1) 100%);
+            animation: gradientMove 15s ease infinite;
+            background-size: 200% 200%;
+            z-index: -1;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-sizing: border-box;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            color: #4a00e0;
+            margin-bottom: 30px;
+            font-size: 2.2em;
+            font-weight: 600;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, #4a00e0, #8e2de2);
+            border-radius: 2px;
+        }
+
+        label {
+            display: block;
+            text-align: left;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: calc(100% - 20px);
+            padding: 12px 10px;
+            margin-bottom: 25px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            border-color: #8e2de2;
+            box-shadow: 0 0 10px rgba(142, 45, 226, 0.2);
+            outline: none;
+        }
+
+        button[type="submit"] {
+            background: linear-gradient(90deg, #4a00e0, #8e2de2);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        button[type="submit"]:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(90deg, #8e2de2, #4a00e0); /* Reverse gradient on hover */
+        }
+
+        .error-message {
+            margin-top: 25px;
+            padding: 15px;
+            background-color: #ffe6e6;
+            border: 1px solid #e6a6a6;
+            border-radius: 10px;
+            color: #cc0000;
+            font-weight: 500;
+            animation: slideInUp 0.5s ease-out;
+        }
+
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        p {
+            margin-top: 25px;
+            color: #555;
+        }
+
+        p a {
+            color: #4a00e0;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        p a:hover {
+            color: #8e2de2;
+            text-decoration: underline;
+        }
+
+        /* Particle effects */
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: float 10s infinite ease-in-out;
+            opacity: 0;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) translateX(0); opacity: 0; }
+            25% { opacity: 1; }
+            50% { transform: translateY(-50px) translateX(20px); opacity: 0.8; }
+            75% { opacity: 1; }
+            100% { transform: translateY(0) translateX(0); opacity: 0; }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Login to Mining Pool</h2>
+        <form method="post">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required><br>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required><br>
+
+            <button type="submit">Login</button>
+        </form>
+
+        {% if error %}
+            <div class="error-message">
+                <p>❌ {{ error }}</p>
+            </div>
+        {% endif %}
+
+        <p>Don't have an account? <a href="/register">Register here</a></p>
+    </div>
+
+    <script>
+        // JavaScript for dynamic effects
+        document.addEventListener('DOMContentLoaded', () => {
+            const body = document.body;
+
+            // Add particle effects
+            function createParticle() {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                const size = Math.random() * 10 + 5; // Size between 5px and 15px
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${Math.random() * 100}vw`;
+                particle.style.top = `${Math.random() * 100}vh`;
+                particle.style.animationDuration = `${Math.random() * 5 + 5}s`; // Duration between 5s and 10s
+                particle.style.animationDelay = `${Math.random() * 5}s`; // Delay up to 5s
+                body.appendChild(particle);
+
+                // Remove particle after animation to prevent performance issues
+                particle.addEventListener('animationend', () => {
+                    particle.remove();
+                });
+            }
+
+            // Create a few particles initially
+            for (let i = 0; i < 20; i++) {
+                createParticle();
+            }
+
+            // Create new particles periodically
+            setInterval(createParticle, 1000); // Create a new particle every second
+        });
+    </script>
+</body>
+</html>

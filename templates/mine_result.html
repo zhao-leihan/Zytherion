@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mining Result | Zytherion Mining</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Poppins:wght@300;400;600;700&family=Roboto+Mono:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #e0f2f7 0%, #d1e0f0 100%); /* Light subtle gradient background */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: #333;
+            overflow: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(100, 100, 255, 0.1) 0%, rgba(150, 0, 255, 0.1) 100%);
+            animation: gradientMove 15s ease infinite;
+            background-size: 200% 200%;
+            z-index: -1;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.85);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            max-width: 700px;
+            width: 90%;
+            box-sizing: border-box;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+            animation: fadeIn 1s ease-out;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: #2e008c;
+            margin-bottom: 30px;
+            font-size: 2.8em;
+            font-weight: 700;
+            position: relative;
+            padding-bottom: 15px;
+            text-shadow: 0 0 10px rgba(74, 0, 224, 0.6);
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 5px;
+            background: linear-gradient(90deg, #4a00e0, #8e2de2);
+            border-radius: 3px;
+            box-shadow: 0 0 12px rgba(142, 45, 226, 0.6);
+        }
+
+        .output-section {
+            background-color: #0d0d0d;
+            padding: 25px;
+            border-radius: 12px;
+            color: #00ff00;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.95em;
+            text-align: left;
+            overflow-x: auto;
+            overflow-y: auto;
+            max-height: 300px;
+            border: 1px solid #004400;
+            box-shadow: inset 0 0 10px rgba(0, 255, 0, 0.3);
+            animation: terminalPulse 3s infinite alternate;
+        }
+
+        @keyframes terminalPulse {
+            from { box-shadow: inset 0 0 10px rgba(0, 255, 0, 0.3); }
+            to { box-shadow: inset 0 0 15px rgba(0, 255, 0, 0.5); }
+        }
+
+        .output-section pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-break: break-all;
+            line-height: 1.4;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: center; /* Center the buttons */
+            gap: 20px; /* Space between buttons */
+            margin-top: 35px; /* Space above the button group */
+            flex-wrap: wrap; /* Allow wrapping on small screens */
+        }
+
+        .button-group button {
+            background: linear-gradient(90deg, #4a00e0, #8e2de2);
+            color: white;
+            padding: 15px 35px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.15em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        /* Styling for the Stop Mining button specifically */
+        .button-group button[type="submit"] {
+            background: linear-gradient(90deg, #e04a00, #ff8c00); /* Orange gradient for Stop Mining */
+        }
+
+        .button-group button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: skewX(-30deg);
+            transition: 0.5s ease-in-out;
+            z-index: -1;
+        }
+
+        .button-group button:hover::before {
+            left: 100%;
+        }
+
+        .button-group button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Hover for Stop Mining button */
+        .button-group button[type="submit"]:hover {
+            background: linear-gradient(90deg, #ff8c00, #e04a00); /* Reverse gradient on hover */
+        }
+
+        /* Particle effects */
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: float 10s infinite ease-in-out;
+            opacity: 0;
+            z-index: 0;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) translateX(0); opacity: 0; }
+            25% { opacity: 1; }
+            50% { transform: translateY(-50px) translateX(20px); opacity: 0.8; }
+            75% { opacity: 1; }
+            100% { transform: translateY(0) translateX(0); opacity: 0; }
+        }
+
+        /* Glare effect for container */
+        .glare {
+            position: absolute;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: -100%;
+            transform: skewX(-20deg);
+            animation: moveGlare 5s infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes moveGlare {
+            0% { left: -100%; }
+            50% { left: 100%; }
+            100% { left: -100%; }
+        }
+
+        footer {
+            margin-top: auto;
+            padding: 20px;
+            color: #777;
+            font-size: 0.9em;
+            text-align: center;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.05);
+            position: relative;
+            z-index: 2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="glare"></div>
+        <h2>✅ Solo Mining Result for {{ address }}</h2>
+        <div class="output-section">
+            <pre>{{ output }}</pre>
+        </div>
+        <div class="button-group">
+            <a href="/dashboard">
+                <button>← Back to Dashboard</button>
+            </a>
+            <form action="/stop_mining" method="post">
+                <button type="submit">🛑 Stop Mining</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Zytherion Mining. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const body = document.body;
+
+            // Add particle effects
+            function createParticle() {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                const size = Math.random() * 10 + 5;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${Math.random() * 100}vw`;
+                particle.style.top = `${Math.random() * 100}vh`;
+                particle.style.animationDuration = `${Math.random() * 5 + 5}s`;
+                particle.style.animationDelay = `${Math.random() * 5}s`;
+                body.appendChild(particle);
+
+                particle.addEventListener('animationend', () => {
+                    particle.remove();
+                });
+            }
+
+            for (let i = 0; i < 20; i++) {
+                createParticle();
+            }
+
+            setInterval(createParticle, 1000);
+
+            // Optional: Simulate typing effect for the output (if output is short)
+            const preElement = document.querySelector('.output-section pre');
+            if (preElement) {
+                const originalText = preElement.textContent;
+                preElement.textContent = '';
+                let i = 0;
+                const typingSpeed = 10;
+
+                function typeWriter() {
+                    if (i < originalText.length) {
+                        preElement.textContent += originalText.charAt(i);
+                        i++;
+                        setTimeout(typeWriter, typingSpeed);
+                    } else {
+                        preElement.parentElement.scrollTop = preElement.parentElement.scrollHeight;
+                    }
+                }
+                typeWriter();
+            }
+
+            // Console log for a bit of a "hacker" feel
+            console.log("%cZytherion Mining: Operation Log", "color: #00ff00; font-size: 20px; font-weight: bold; font-family: 'Roboto Mono', monospace;");
+            console.log("%cMining process completed. Reviewing results...", "color: #00dd00; font-size: 14px;");
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Send ZYTH | Zytherion Mining</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Poppins:wght@300;400;600;700&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #e0f2f7 0%, #d1e0f0 100%); /* Light subtle gradient background */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: #333;
+            overflow: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(100, 100, 255, 0.1) 0%, rgba(150, 0, 255, 0.1) 100%);
+            animation: gradientMove 15s ease infinite;
+            background-size: 200% 200%;
+            z-index: -1;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.85); /* Frosted glass white */
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15); /* Stronger shadow */
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+            box-sizing: border-box;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+            animation: fadeIn 1s ease-out;
+            border: 2px solid rgba(255, 255, 255, 0.5); /* Subtle border */
+            backdrop-filter: blur(10px); /* Frosted glass effect */
+            margin-bottom: 20px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: #2e008c;
+            margin-bottom: 30px;
+            font-size: 2.2em;
+            font-weight: 700;
+            position: relative;
+            padding-bottom: 15px;
+            text-shadow: 0 0 10px rgba(74, 0, 224, 0.6);
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 5px;
+            background: linear-gradient(90deg, #4a00e0, #8e2de2);
+            border-radius: 3px;
+            box-shadow: 0 0 12px rgba(142, 45, 226, 0.6);
+        }
+
+        label {
+            display: block;
+            text-align: left;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: calc(100% - 20px);
+            padding: 12px 10px;
+            margin-bottom: 25px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            background-color: rgba(255, 255, 255, 0.9);
+            font-family: 'Roboto Mono', monospace; /* For address and amount */
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus {
+            border-color: #8e2de2;
+            box-shadow: 0 0 10px rgba(142, 45, 226, 0.2);
+            outline: none;
+        }
+
+        /* Styling for the Send button */
+        .send-button {
+            background: linear-gradient(90deg, #007bff, #00d4ff); /* Blue gradient for sending */
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .send-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: skewX(-30deg);
+            transition: 0.5s ease-in-out;
+            z-index: -1;
+        }
+
+        .send-button:hover::before {
+            left: 100%;
+        }
+
+        .send-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(90deg, #00d4ff, #007bff); /* Reverse gradient on hover */
+        }
+
+        /* Improved styling for Back to Dashboard button */
+        .back-to-dashboard-link {
+            display: inline-block;
+            margin-top: 25px;
+        }
+        
+        .back-to-dashboard-link button {
+            background: #ffffff; /* White background */
+            color: #4a00e0; /* Purple text */
+            padding: 15px 35px; /* Larger padding */
+            border: 2px solid #4a00e0; /* Purple border */
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smooth animation */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Animation on hover for the back button */
+        .back-to-dashboard-link button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(45deg, #8e2de2, #4a00e0); /* Purple gradient on hover */
+            color: #fff; /* White text on hover */
+            border-color: #8e2de2;
+        }
+
+        .back-to-dashboard-link button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.4s ease, height 0.4s ease;
+        }
+
+        .back-to-dashboard-link button:hover::before {
+            width: 250px;
+            height: 250px;
+        }
+
+
+        /* Particle effects */
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: float 10s infinite ease-in-out;
+            opacity: 0;
+            z-index: 0;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) translateX(0); opacity: 0; }
+            25% { opacity: 1; }
+            50% { transform: translateY(-50px) translateX(20px); opacity: 0.8; }
+            75% { opacity: 1; }
+            100% { transform: translateY(0) translateX(0); opacity: 0; }
+        }
+
+        /* Glare effect for container */
+        .glare {
+            position: absolute;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: -100%;
+            transform: skewX(-20deg);
+            animation: moveGlare 5s infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes moveGlare {
+            0% { left: -100%; }
+            50% { left: 100%; }
+            100% { left: -100%; }
+        }
+
+        footer {
+            margin-top: auto;
+            padding: 20px;
+            color: #777;
+            font-size: 0.9em;
+            text-align: center;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.05);
+            position: relative;
+            z-index: 2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="glare"></div>
+        <h2>Send ZYTH</h2>
+        <form action="/send" method="POST">
+            <label>To Address:</label><br>
+            <input type="text" name="to" required><br><br>
+
+            <label>Amount:</label><br>
+            <input type="number" step="0.00000001" name="amount" required><br><br>
+
+            <button type="submit" class="send-button">Send</button>
+        </form>
+        <div class="back-to-dashboard-link">
+            <a href="/dashboard"><button>Back to Dashboard</button></a>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Zytherion Mining. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const body = document.body;
+
+            // Add particle effects
+            function createParticle() {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                const size = Math.random() * 10 + 5;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${Math.random() * 100}vw`;
+                particle.style.top = `${Math.random() * 100}vh`;
+                particle.style.animationDuration = `${Math.random() * 5 + 5}s`;
+                particle.style.animationDelay = `${Math.random() * 5}s`;
+                body.appendChild(particle);
+
+                particle.addEventListener('animationend', () => {
+                    particle.remove();
+                });
+            }
+
+            for (let i = 0; i < 20; i++) {
+                createParticle();
+            }
+
+            setInterval(createParticle, 1000);
+
+            // Console log for a bit of a "hacker" feel
+            console.log("%cZytherion Transaction Protocol", "color: #007bff; font-size: 20px; font-weight: bold; font-family: 'Orbitron', sans-serif;");
+            console.log("%cEncrypting transaction data. Ready to transmit...", "color: #00d4ff; font-size: 14px;");
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+{
+  "Index": 36,
+  "Timestamp": "2025-08-17T12:45:50.708940",
+  "Transactions": [
+    {
+      "from": "SYSTEM",
+      "to": "zyth-2a74777cfe93a4a5",
+      "amount": 3.125,
+      "timestamp": "2025-08-17T12:45:50.708940"
+    },
+    {
+      "from": "zyth-3dc13e1c6f3b31d5",
+      "to": "zyth-f3639610333e6430",
+      "amount": 100.0,
+      "timestamp": "2025-08-17T12:38:48Z",
+      "signature": "fd7904e50847624b53a3738e16f7a281a2dcbb9a5253e2d6b3bae33b3b9110b4861d3fdef801093a90ac53c414c91bb5a29ea4bdb5aac1a56965a58eb9a04076"
+    },
+    {
+      "from": "zyth-f3639610333e6430",
+      "to": "zyth-f3639610333e6430",
+      "amount": 100.0,
+      "timestamp": "2025-08-17T12:39:37Z",
+      "signature": "b7ef517c043a8bc0630ae149e0a0ca142ee6fbf7e194d893a19133d6ee6f164f593529c04928e622a0e9751c7f95c3941a8d5100a2ed708a188c2565011dcf"
+    }
+  ],
+  "PreviousHash": "0000077a553086a1d9cd8f74e7509a5bcb53b60871f459ee501007bd7391cb45",
+  "Nonce": 27290,
+  "Miner": "zyth-2a74777cfe93a4a5",
+  "Reward": 3.125,
+  "Hash": "00000b5a0034a8ab065c1c8d73277d2242db082825f759a14f1fcbb295364059"
+}

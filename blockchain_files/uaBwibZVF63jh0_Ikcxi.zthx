@@ -1,0 +1,17 @@
+{
+  "Index": 0,
+  "Timestamp": "2025-08-17T12:27:33.103436",
+  "Transactions": [
+    {
+      "from": "SYSTEM",
+      "to": "GENESIS",
+      "amount": 0,
+      "timestamp": "2025-08-17T12:27:33.103436"
+    }
+  ],
+  "PreviousHash": "0",
+  "Nonce": 0,
+  "Miner": "GENESIS",
+  "Reward": 0,
+  "Hash": "3485b06f3ce8487d8800b7c19c1353228893ccfc3cc7210b8b64a4d5f491ea1b"
+}
