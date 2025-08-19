@@ -61,7 +61,7 @@ The miner will start processing transactions and mining new blocks to the blockc
 
 ---
 
-## 🧱 Current Features
+## Current Features
 
 - Simple blockchain with hashing and proof-of-work  
 - Basic peer-to-peer network  
@@ -73,7 +73,7 @@ The miner will start processing transactions and mining new blocks to the blockc
 
 ## Development Notes
 
-- Use `app.py` as the main node (Flask server)  
+- Use `Wallet.py` as the main node (Flask server)  
 - Use `miner.py` to start the mining process  
 - All peers must have synchronized peer lists for the network to work  
 
